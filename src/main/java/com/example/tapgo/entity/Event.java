@@ -28,4 +28,8 @@ public class Event {
     @ManyToOne
     @JoinColumn(name = "place_id")
     private Place place;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 }

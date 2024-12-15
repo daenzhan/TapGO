@@ -3,6 +3,8 @@ package com.example.tapgo.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Date;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -23,6 +25,9 @@ public class Review {
     @Column
     private float rating;
 
+    @Column
+    private Date createdAt;
+
     @ManyToOne
     @JoinColumn(name = "place_id")
     private Place place;
@@ -30,5 +35,10 @@ public class Review {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
+    @PrePersist
+    public void createDate() {
+        this.createdAt = new Date();
+    }
 }
 

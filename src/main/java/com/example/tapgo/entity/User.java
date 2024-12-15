@@ -1,6 +1,7 @@
 package com.example.tapgo.entity;
 
 import jakarta.persistence.*;
+import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.Email;
 import lombok.*;
 
@@ -10,7 +11,9 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table
+@Data
+@Transactional
+@Table(name="users")
 @Entity
 public class User {
 
@@ -30,6 +33,12 @@ public class User {
     @Email
     private String email;
 
+    @Column
+    private String profilePhoto;
+
+    @Column(nullable = false)
+    private boolean enabled;
+
     @Column(name="is_admin",nullable = false)
     private boolean isAdmin=false;
     public String getRole() {
@@ -39,7 +48,9 @@ public class User {
         this.isAdmin = "ADMIN".equals(role);
     }
 
-    @Column(name="reviews")
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Review> reviews;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Event> events;
 }
