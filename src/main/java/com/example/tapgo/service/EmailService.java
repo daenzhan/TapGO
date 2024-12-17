@@ -13,12 +13,31 @@ public class EmailService {
         this.mailSender = mailSender;
     }
 
+//    public void sendEmail(String to, String subject, String body) {
+//        SimpleMailMessage message = new SimpleMailMessage();
+//        message.setFrom("usersmanagement939@gmail.com");
+//        message.setTo(to);
+//        message.setSubject(subject);
+//        message.setText(body);
+//        mailSender.send(message);
+//    }
+
     public void sendEmail(String to, String subject, String body) {
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("usersmanagement939@gmail.com");
-        message.setTo(to);
-        message.setSubject(subject);
-        message.setText(body);
-        mailSender.send(message);
+        try {
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setFrom("usersmanagement939@gmail.com");
+            message.setTo(to);
+            message.setSubject(subject);
+            message.setText(body);
+            mailSender.send(message);
+            System.out.println("Email sent successfully to " + to);
+        } catch (Exception e) {
+            System.err.println("Error sending email: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
+
 }
+
+
+

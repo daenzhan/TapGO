@@ -15,6 +15,7 @@ import java.util.List;
 
 @Service
 public class MyUserDetailsService implements UserDetailsService {
+
     @Autowired
     private UserRepository userRepository;
 
@@ -25,7 +26,7 @@ public class MyUserDetailsService implements UserDetailsService {
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),
                 user.getPassword(),
-                true,
+                user.isEnabled(),
                 true,
                 true,
                 true,

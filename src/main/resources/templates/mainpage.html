@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>TapGo! Main Page</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    /* General Styles */
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background-color: #f8e1e8; /* Light pink */
+      color: #543e5c; /* Dark purple */
+      margin: 0;
+      padding: 0;
+      line-height: 1.7;
+    }
+
+    .container {
+      width: 90%;
+      margin: auto;
+      padding: 20px 0;
+    }
+
+    /* Header Section */
+    header {
+      background-color: #f6b7d7; /* Soft pink */
+      color: #543e5c; /* Dark purple */
+      padding: 15px 20px;
+      border-bottom-left-radius: 30px;
+      border-bottom-right-radius: 30px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header .logo {
+      font-family: 'Poppins', sans-serif;
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+      color: #cf3e81; /* Dark purple */
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 100px;
+      margin: 0;
+      padding: 0;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: #543e5c; /* Dark purple */
+      font-weight: 700;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    nav a:hover, nav a.active {
+      color: #cf3e81; /* Lighter pink */
+      text-decoration: underline;
+    }
+
+    .user-info {
+      background-color: #cf3e81; /* Lighter pink */
+      padding: 6px 12px;
+      border-radius: 20px;
+      color: #fff;
+      font-size: 1rem;
+      cursor: pointer; /* chan*/
+      transition: 0.3s;
+    }
+    .user-info:hover {
+      background-color: #af3369; /*new*/
+    }
+
+    /*new*/
+    .modal-profile {
+      position: fixed;
+      right: 0;
+      top: 0;
+      width: 300px; /* Adjust the width as needed */
+      height: 100vh; /* Full height of the viewport */
+      background-color: #fff;
+      box-shadow: -4px 0 12px rgba(0, 0, 0, 0.2);
+      transform: translateX(100%);
+      transition: transform 0.5s ease;
+      z-index: 1000;
+    }
+    .modal-profile.active {
+      transform: translateX(0);
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .modal-header h2 {
+      margin: 0;
+      color: #543e5c;
+    }
+
+    .modal-header .close-btn {
+      font-size: 1.5rem;
+      color: #cf3e81;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .modal-header .close-btn:hover {
+      color: #af3369;
+    }
+
+    .modal-content {
+      padding: 15px;
+      color: #543e5c;
+    }
+    /*to their new*/
+
+
+
+    /* Hero Section */
+    .hero {
+      text-align: center;
+      margin: 40px 0;
+      background-color: #f6b7d7; /* Soft pink */
+      padding: 5px 10px;
+      border-radius: 20px;
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .hero h1 {
+      font-size: 3rem;
+      color: #543e5c; /* Dark purple */
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+      color: #543e5c; /* Dark purple */
+      max-width: 600px;
+      margin: auto;
+    }
+
+    /* About Us Section */
+    .about-us {
+      background-color: #f6b7d7; /* Soft pink */
+      padding: 10px;
+      border-radius: 20px;
+      text-align: center;
+      margin-bottom: 20px;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .about-us h2 {
+      font-size: 2.2rem;
+      margin-bottom: 15px;
+      color: #543e5c; /* Dark purple */
+      font-weight: 700;
+    }
+
+    .about-us p {
+      font-size: 1rem;
+      color: #543e5c; /* Dark purple */
+      line-height: 1.6;
+      margin-bottom: 15px;
+    }
+
+    .highlight {
+      color: #cf3e81; /* Lighter pink */
+      font-weight: 600;
+    }
+
+  </style>
+</head>
+<body>
+<div class="container">
+  <!-- Header -->
+  <header>
+    <div class="logo"><i class="fas fa-solid fa-map-pin"></i>TapGo!</div>
+    <nav>
+      <ul>
+        <li><a href="/show/places"><i class="fas fa-map-marked-alt"></i>Places</a></li>
+        <li><a href="/events"><i class="fas fa-calendar-alt"></i>Events</a></li>
+        <li><a href="/my-events"><i class="fas fa-user-clock"></i>My Events</a></li>
+        <li><a href="/main" class="active"><i class="fas fa-info-circle"></i>About Us</a></li>
+      </ul>
+    </nav>
+    <div class="user-info" onclick="toggleProfile()"><i class="fas fa-user"></i>Hi, <span th:text="${username}">User</span>!</div>
+  </header>
+
+  <!-- Profile Modal -->
+  <div class="modal-profile" id="modal-profile">
+    <div class="modal-header">
+      <h2>User Profile</h2>
+      <span class="close-btn" onclick="toggleProfile()">×</span>
+    </div>
+    <div class="modal-content">
+      <p><strong><i class="fas fa-user"></i><span th:text="${user.username}">Name:</span></strong> </p>
+      <p><strong><i class="fas fa-envelope"></i> <span th:text="${user.email}">user@example.com</span></strong> </p>
+<!--      <p><strong><i class="fas fa-user-shield"></i><span th:text="${admin.role}">Administrator</span></strong></p>-->
+    </div>
+  </div>
+
+  <script>
+    // Toggle Profile Modal
+    function toggleProfile() {
+      const modal = document.getElementById('modal-profile');
+      modal.classList.toggle('active');
+    }
+
+    // Example of load content function
+    function loadContent(section) {
+      document.getElementById('dynamic-content').innerHTML = `<h2>${section.charAt(0).toUpperCase() + section.slice(1)}</h2><p>Content for ${section} goes here.</p>`;
+    }
+  </script>
+
+
+
+
+
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <h1>Welcome, <span th:text="${username}">User</span>!</h1>
+    <p>Explore amazing places and events with TapGo!</p>
+  </section>
+
+  <!-- About Us Section -->
+  <section class="about-us">
+    <h2>About Us</h2>
+    <p>We are a team of passionate third-year students, working on our first Java project—TapGo!</p>
+    <p>Our app helps you discover exciting places and events around you.</p>
+    <p>With love, <br>The TapGo! Team <span style="color: #cf3e81;">💖</span></p>
+  </section>
+
+
+</div>
+</body>
+</html>

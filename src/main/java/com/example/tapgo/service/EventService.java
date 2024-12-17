@@ -2,8 +2,10 @@ package com.example.tapgo.service;
 
 import com.example.tapgo.entity.Event;
 import com.example.tapgo.entity.Place;
+import com.example.tapgo.entity.User;
 import com.example.tapgo.repository.EventRepository;
 import com.example.tapgo.repository.PlaceRepository;
+import com.example.tapgo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -20,11 +22,29 @@ import java.util.List;
 public class EventService {
     private final EventRepository eventRepository;
     private final PlaceRepository placeRepository;
+    private final UserRepository userRepository;
 
-    public EventService(EventRepository eventRepository, PlaceRepository placeRepository) {
+    public EventService(EventRepository eventRepository,
+                        PlaceRepository placeRepository,
+                        UserRepository userRepository) {
         this.eventRepository = eventRepository;
         this.placeRepository = placeRepository;
+        this.userRepository = userRepository;
     }
+
+    public List<Event> getEvByUser(String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found: " + username));
+        return eventRepository.findByUser(user);
+    }
+
+    public void saveEvByUsername(Event event, String username) {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found: " + username));
+        event.setUser(user);
+        eventRepository.save(event);
+    }
+
     public  void saveEv(Event ev) {
         eventRepository.save(ev);
     }
@@ -83,6 +103,7 @@ public class EventService {
                 throw new IllegalArgumentException("Invalid place ID: " + updateEv.getPlace().getPlaceId());
             }
         }
+        ex.setDate(updateEv.getDate());
         eventRepository.save(ex);
     }
 

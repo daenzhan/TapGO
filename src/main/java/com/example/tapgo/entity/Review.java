@@ -1,6 +1,7 @@
 package com.example.tapgo.entity;
 
 import jakarta.persistence.*;
+import jakarta.transaction.Transactional;
 import lombok.*;
 
 import java.util.Date;
@@ -10,6 +11,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table
+@Transactional
 @Entity
 public class Review {
 
@@ -23,7 +25,7 @@ public class Review {
     private String description;
 
     @Column
-    private float rating;
+    private double rating;
 
     @Column
     private Date createdAt;

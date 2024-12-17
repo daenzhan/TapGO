@@ -4,7 +4,10 @@ import jakarta.persistence.*;
 import jakarta.transaction.Transactional;
 import jakarta.validation.constraints.Email;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collection;
 import java.util.List;
 
 @Getter
@@ -15,7 +18,7 @@ import java.util.List;
 @Transactional
 @Table(name="users")
 @Entity
-public class User {
+public class User implements UserDetails{
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator="MySequenceGenerator")
@@ -48,9 +51,47 @@ public class User {
         this.isAdmin = "ADMIN".equals(role);
     }
 
+    @OneToMany(mappedBy="user", cascade=CascadeType.ALL, fetch=FetchType.LAZY)
+    private List<Place> places;
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Review> reviews;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Event> events;
+
+    @Override
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of();
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return username;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
 }

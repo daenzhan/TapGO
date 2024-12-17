@@ -44,6 +44,15 @@ public class EventController {
         return "events";
     }
 
+    @GetMapping("/myevents")
+    public String listMyEvents(Model model, Principal principal) {
+        String currentUsername = principal.getName();
+        List<Event>myEv=eventService.getEvByUser(currentUsername);
+        model.addAttribute("events",myEv);
+        return "myevents";
+    }
+
+
     @GetMapping("addEvent/{placeId}")
     public String newEventForm(@PathVariable("placeId") Long placeId,
                            @Valid @ModelAttribute Event event,

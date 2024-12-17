@@ -3,6 +3,8 @@ package com.example.tapgo.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -23,7 +25,11 @@ public class Event {
     @Column
     private String description;
 
+    @Column
     private String photo;
+
+    @Column
+    private LocalDateTime date;
 
     @ManyToOne
     @JoinColumn(name = "place_id")

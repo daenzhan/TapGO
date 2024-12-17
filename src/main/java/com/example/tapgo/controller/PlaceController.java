@@ -1,10 +1,14 @@
 package com.example.tapgo.controller;
 
 import com.example.tapgo.entity.Place;
+import com.example.tapgo.entity.Review;
 import com.example.tapgo.entity.User;
 import com.example.tapgo.repository.PlaceRepository;
 import com.example.tapgo.service.PlaceService;
 import com.example.tapgo.service.UserService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -29,10 +34,39 @@ public class PlaceController {
         this.userService = userService;
     }
 
+    public double calculateAverageRating(List<Review> reviews) {
+        if (reviews == null) {
+            return 0.0;
+        }
+        double totalRating = 0.0;
+        for (Review review : reviews) {
+            totalRating += review.getRating();
+        }
+        return totalRating / reviews.size();
+    }
+
     // SHOW PLACES
     @GetMapping("/show/places")
-    public String showPlacePage(Model model){
-        model.addAttribute("places", placeRepository.findAll());
+    public String showPlacePage(Model model,
+                                @RequestParam(defaultValue = "0") int page,
+                                Authentication authentication){
+        String username = authentication.getName();
+        int size = 4;
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Place> places = placeRepository.findAll(pageable);
+
+        for (Place place : places.getContent()) {
+            double averageRating = calculateAverageRating(place.getReviews());
+            place.setAverageRating(averageRating);
+        }
+
+        model.addAttribute("places", places.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", places.getTotalPages());
+        model.addAttribute("totalItems", places.getTotalElements());
+        model.addAttribute("username",username);
+
         return "place-list";
     }
 
@@ -49,6 +83,7 @@ public class PlaceController {
                               @RequestParam String place_name,
                               @RequestParam String location,
                               @RequestParam String category,
+                              @RequestParam String city,
                               @RequestParam String photo){
         String username = authentication.getName();
         User u = userService.findByUsername(username);
@@ -57,6 +92,7 @@ public class PlaceController {
             p.setPlaceName(place_name);
             p.setLocation(location);
             p.setCategory(category);
+            p.setCity(city);
             p.setPhotos(photo);
             placeService.save(p);
         }
@@ -68,7 +104,9 @@ public class PlaceController {
     // EDIT PLACE
     @GetMapping("/edit/place/{placeId}")
     public String editPlacePage (@PathVariable("placeId") Long place_id,
-                              Model model){
+                              Model model, Authentication authentication){
+        String username = authentication.getName();
+        User u = userService.findByUsername(username);
         Place p = placeService.findByPlaceId(place_id);
         if (p==null){
             model.addAttribute("error","place doesnt exist!");
@@ -76,7 +114,8 @@ public class PlaceController {
         }
 
         model.addAttribute("place", p);
-        return "place-edit-form";
+        model.addAttribute("user",u);
+        return "place-details";
     }
 
 
@@ -87,6 +126,7 @@ public class PlaceController {
                              @RequestParam String place_name,
                              @RequestParam String location,
                              @RequestParam String category,
+                             @RequestParam String city,
                              @RequestParam("photo") MultipartFile photo,
                              Authentication authentication){
         String username = authentication.getName();
@@ -94,10 +134,10 @@ public class PlaceController {
         if (!u.isAdmin()){
             return "main_page";   // МОЖНО ЭТО ПЕРЕНАСТРОИТЬ
         }
-        boolean success = placeService.updatePlace(place_id,place_name,location,category,photo);
+        boolean success = placeService.updatePlace(place_id,place_name,location,category,city,photo);
 
         if(!success){
-            return "redirect:/edit/place/{placeId}";
+            return "redirect:/edit/place/" + place_id;
         }
         else return  "redirect:/show/places";
     }
@@ -115,22 +155,10 @@ public class PlaceController {
         boolean success = placeService.deletePlace(place_id);
 
         if(!success){
-            return "redirect:/edit/place/{placeId}";
+            return "redirect:/show/places";
         }
-        else return  "redirect:/show/places";
+        else return  "redirect:/edit/place/" + place_id;
 
-    }
-
-    // SHOW INFO ABOUT PLACE
-    @GetMapping("/show/place/{placeId}")
-    public String showInfoPlace(@PathVariable("placeId")Long place_id,
-                                Model model){
-        Place p = placeService.findByPlaceId(place_id);
-        model.addAttribute("place", p);
-        model.addAttribute("reviews", p.getReviews());
-        model.addAttribute("events", p.getEvents());
-
-        return  "place-details";
     }
 
 

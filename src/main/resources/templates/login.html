@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Poppins:wght@500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #fef1f6; /* Soft pink background */
+            color: #5a3d55; /* Dark purple text */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Container */
+        .login-container {
+            background-color: #ffffff; /* White background */
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            padding: 40px 50px;
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+        }
+
+        /* Logo/Header */
+        .header-container h1 {
+            color: #cf3e81; /* Highlight color */
+            font-weight: 700;
+            margin-bottom: 20px;
+            font-size: 2rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Form Fields */
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        form label {
+            font-weight: 600;
+            color: #5a3d55; /* Dark purple */
+            text-align: left;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        form input {
+            padding: 10px;
+            border: 2px solid #e6b8cc; /* Light pink border */
+            border-radius: 10px;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        form input:focus {
+            border-color: #cf3e81; /* Highlight color */
+            box-shadow: 0 0 5px rgba(207, 62, 129, 0.3);
+        }
+
+        /* Buttons */
+        button {
+            background-color: #cf3e81; /* Highlight color */
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            padding: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #ab3268; /* Darker pink */
+        }
+
+        /* Links */
+        span, a {
+            font-size: 0.9rem;
+            color: #5a3d55;
+        }
+
+        a {
+            color: #cf3e81; /* Highlight color */
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* Error Message */
+        .alert {
+            background-color: #ffdddd;
+            color: #a94442;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+
+        /* Top Navigation */
+        .topnav {
+            text-align: right;
+            margin-bottom: 20px;
+        }
+
+        .topnav a {
+            color: #cf3e81;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.3s;
+        }
+
+        .topnav a:hover {
+            color: #ab3268;
+        }
+    </style>
+</head>
+<body>
+<!-- Main Container -->
+<div class="login-container">
+    <!-- Top Navigation -->
+    <div class="topnav">
+        <a th:href="@{/register}">Sign Up</a>
+    </div>
+
+    <!-- Header -->
+    <div class="header-container">
+        <h1>Login</h1>
+    </div>
+
+    <!-- Login Form -->
+    <form th:action="@{/login}" method="post">
+        <div th:if="${error}" class="alert" th:text="${error}"></div>
+
+        <div>
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" required>
+        </div>
+        <div>
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        <button type="submit">Login</button>
+
+        <!-- Forgot Password -->
+        <span>Forgot password? <a th:href="@{/forgotPassword}">Reset Password</a></span>
+    </form>
+</div>
+</body>
+</html>

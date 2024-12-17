@@ -31,7 +31,7 @@ public class UserConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/register", "/login", "/css/**", "/js/**").permitAll()
+                        .requestMatchers("/register", "/login", "/css/**", "/js/**", "/forgotPassword", "/resetPassword", "/confirmRegistration").permitAll()
                         .requestMatchers("/admin/**", "/userlist").hasAuthority("ADMIN")
                         .requestMatchers("/user/**", "/eventlist/").hasAnyAuthority("USER", "ADMIN")
                         .anyRequest().authenticated()
@@ -42,9 +42,9 @@ public class UserConfig {
                         .successHandler(((request, response, authentication) -> {
                             String username = authentication.getName();
                             if (authentication.getAuthorities().stream().anyMatch(authoriy -> authoriy.getAuthority().equals("ADMIN"))) {
-                                response.sendRedirect("/adminhome/" + username);
+                                response.sendRedirect("/main");
                             } else {
-                                response.sendRedirect("/userhome/" + username);
+                                response.sendRedirect("/main");
                             }
                         }))
                 )
@@ -57,3 +57,4 @@ public class UserConfig {
     }
 
 }
+

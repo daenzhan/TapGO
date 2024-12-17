@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TapGo! Main Page</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #f8e1e8; /* Light pink */
+            color: #543e5c; /* Dark purple */
+            margin: 0;
+            padding: 0;
+            line-height: 1.7;
+        }
+
+        .container {
+            width: 90%;
+            margin: auto;
+            padding: 20px 0;
+        }
+
+        /* Header Section */
+        header {
+            background-color: #f6b7d7; /* Soft pink */
+            color: #543e5c; /* Dark purple */
+            padding: 15px 20px;
+            border-bottom-left-radius: 30px;
+            border-bottom-right-radius: 30px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header .logo {
+            font-family: 'Poppins', sans-serif;
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            color: #cf3e81; /* Dark purple */
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 100px;
+            margin: 0;
+            padding: 0;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #543e5c; /* Dark purple */
+            font-weight: 700;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        nav a:hover, nav a.active {
+            color: #cf3e81; /* Lighter pink */
+            text-decoration: underline;
+        }
+
+        .user-info {
+            background-color: #cf3e81; /* Lighter pink */
+            padding: 6px 12px;
+            border-radius: 20px;
+            color: #fff;
+            font-size: 1rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            margin: 40px 0;
+            background-color: #f6b7d7; /* Soft pink */
+            padding: 5px 10px;
+            border-radius: 20px;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            color: #543e5c; /* Dark purple */
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: #543e5c; /* Dark purple */
+            max-width: 600px;
+            margin: auto;
+        }
+
+        .edit-place {
+            background-color: #f6b7d7; /* Soft pink */
+            padding: 30px;  /* Reduced padding */
+            border-radius: 12px;
+            margin-top: 20px;  /* Added top margin */
+            margin-bottom: 15px;  /* Reduced margin-bottom */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 300px;  /* Reduced max-width */
+            margin: auto;
+        }
+
+        .edit-place h2 {
+            font-size: 1.4rem;  /* Smaller font size */
+            color: #543e5c; /* Dark purple */
+            margin-bottom: 10px;  /* Reduced margin-bottom */
+            font-weight: 600;
+        }
+
+        .edit-place label {
+            display: block;
+            font-size: 0.85rem;  /* Smaller font size */
+            margin-bottom: 5px;  /* Reduced margin-bottom */
+            color: #543e5c;
+            font-weight: 600;
+        }
+
+        .edit-place input,
+        .edit-place textarea {
+            width: 100%;
+            padding: 6px;  /* Smaller padding */
+            margin-bottom: 10px;  /* Reduced margin-bottom */
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 0.85rem;  /* Smaller font size */
+        }
+
+        .edit-place textarea {
+            height: 50px;  /* Reduced height */
+            resize: vertical; /* Allows the user to resize the textarea vertically */
+        }
+
+        .edit-place button {
+            background-color: #cf3e81; /* Lighter pink */
+            color: #fff;
+            font-size: 0.85rem;  /* Smaller font size */
+            font-weight: 600;
+            padding: 6px 16px;  /* Smaller padding */
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            display: block;
+            width: 100%;
+        }
+
+        .edit-place button:hover {
+            background-color: #543e5c; /* Dark purple */
+        }
+
+        /* File input specific styling */
+        .edit-place input[type="file"] {
+            padding: 5px;  /* Smaller padding */
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 0.85rem;  /* Smaller font size */
+        }
+        /* About Us Section */
+        .about-us {
+            background-color: #f6b7d7; /* Soft pink */
+            padding: 10px;
+            border-radius: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .about-us h2 {
+            font-size: 2.2rem;
+            margin-bottom: 15px;
+            color: #543e5c; /* Dark purple */
+            font-weight: 700;
+        }
+
+        .about-us p {
+            font-size: 1rem;
+            color: #543e5c; /* Dark purple */
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .highlight {
+            color: #cf3e81; /* Lighter pink */
+            font-weight: 600;
+        }
+
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- Header -->
+    <header>
+        <div class="logo"><i class="fas fa-solid fa-map-pin"></i>TapGo!</div>
+        <nav>
+            <ul>
+                <li><a href="/show/places"><i class="fas fa-map-marked-alt"></i>Places</a></li>
+                <li><a href="/events"><i class="fas fa-calendar-alt"></i>Events</a></li>
+                <li><a href="/my-events"><i class="fas fa-user-clock"></i>My Events</a></li>
+                <li><a href="/main"><i class="fas fa-info-circle"></i>About Us</a></li>
+            </ul>
+        </nav>
+        <div class="user-info"><i class="fas fa-user"></i>Hi, <span th:text="${username}">User</span>!</div>
+    </header>
+
+    <div style="height: 20px;"></div> <!-- Adjust height as needed -->
+
+
+    <section class="edit-place">
+        <h2>Edit</h2>
+        <form th:action="@{/edit/place/{placeId}(placeId=${place.placeId})}"
+              method="POST"
+              enctype="multipart/form-data">
+
+            <label for="placeName">Name:</label>
+            <input type="text" id="placeName" name="place_name" th:value="${place.placeName}" required />
+
+            <label for="placeLocation">Location:</label>
+            <input type="text" id="placeLocation" name="location" th:value="${place.location}" required />
+
+            <label for="placeCategory">Category:</label>
+            <input type="text" id="placeCategory" name="category" th:value="${place.category}" required />
+
+            <label for="placeCity">City:</label>
+            <input type="text" id="placeCity" name="city" th:value="${place.city}" required />
+
+            <label for="placePhotos">Photo:</label>
+            <input type="file" id="placePhotos" name="photo" accept="image/*" />
+
+            <button type="submit">Update</button>
+        </form>
+
+        <div style="height: 5px;"></div> <!-- Adjust height as needed -->
+
+        <!-- Delete Button -->
+        <form th:action="@{/delete/place/{placeId}(placeId=${place.placeId})}" method="POST" onsubmit="return confirm('Are you sure you want to delete this place?');">
+            <button type="submit" style="background-color: #cf3e81; color: #fff; font-weight: 600; padding: 6px 16px; border-radius: 20px; border: none; cursor: pointer;">Delete</button>
+        </form>
+
+    </section>
+
+</div>
+</body>
+</html>
