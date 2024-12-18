@@ -13,15 +13,6 @@ public class EmailService {
         this.mailSender = mailSender;
     }
 
-//    public void sendEmail(String to, String subject, String body) {
-//        SimpleMailMessage message = new SimpleMailMessage();
-//        message.setFrom("usersmanagement939@gmail.com");
-//        message.setTo(to);
-//        message.setSubject(subject);
-//        message.setText(body);
-//        mailSender.send(message);
-//    }
-
     public void sendEmail(String to, String subject, String body) {
         try {
             SimpleMailMessage message = new SimpleMailMessage();

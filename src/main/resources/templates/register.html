@@ -1,50 +1,162 @@
 <!DOCTYPE html>
-<html lang="en"
-      xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="ISO-8859-1">
-  <title>Category Management System</title>
-  <link rel="stylesheet" th:href="@{/css/styles.css}">
+  <meta charset="UTF-8">
+  <title>Sign Up</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Poppins:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f8e1e8;
+      color: #5a3d55;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .register-container {
+      background-color: #f6b7d7;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      padding: 40px 50px;
+      width: 100%;
+      max-width: 450px;
+      text-align: center;
+    }
+
+    .header-container h1 {
+      color: #543e5c;
+      font-weight: 1000;
+      margin-bottom: 5px;
+      font-size: 2.5rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    form label {
+      font-weight: 900;
+      color: #5a3d55;
+      text-align: center;
+      display: block;
+      margin-bottom: 8px;
+      font-size: 1.2rem;
+    }
+
+    form input {
+      padding: 10px;
+      border: 3px solid #cf3e81;
+      border-radius: 25px;
+      font-size: 0.9rem;
+      outline: none;
+      transition: all 0.3s ease;
+      width: 100%;
+      max-width: 420px;
+      margin: 0 auto;
+    }
+
+    form input:focus {
+      border-color: #cf3e81;
+      box-shadow: 0 0 5px rgba(207, 62, 129, 0.3);
+    }
+
+
+    button {
+      background-color: #cf3e81;
+      color: #fff;
+      border: none;
+      border-radius: 20px;
+      padding: 10px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #ab3268;
+    }
+
+    span, a {
+      font-size: 1rem;
+      color: #5a3d55;
+    }
+
+    a {
+      color: #cf3e81;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .alert {
+      background-color: #ffdddd;
+      color: #a94442;
+      padding: 10px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      font-size: 0.9rem;
+    }
+
+
+    .topnav a {
+      color: #cf3e81;
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.3s;
+    }
+
+    .topnav a:hover {
+      color: #ab3268;
+    }
+  </style>
 </head>
 <body>
-<div class="container">
+<div class="register-container">
 
+
+  <!-- Header -->
   <div class="header-container">
-    <h1> Sign Up </h1>
+    <h1>Sign Up</h1>
   </div>
 
-  <hr>
-  <form action="#" th:action="@{/register}" th:object="${user}" method="POST">
+  <form th:action="@{/register}" th:object="${user}" method="POST">
+    <div th:if="${error}" class="alert" th:text="${error}"></div>
 
-    <div class="form-group">
-      <label class="control-label" for="username"> Username: </label>
-      <input id="username" th:field="*{username}" placeholder="Username"
-             class="form-control mb-4 col-4" required autofocus="autofocus">
-      <p th:if="${#fields.hasErrors('username')}" th:errorclass="error" th:errors="*{username}" />
-      <p th:if="${error}" class="text-danger" th:text="${error}"></p>
+    <div>
+      <label for="username">Username</label>
+      <input type="text" id="username" th:field="*{username}" placeholder="Username" required>
+      <p th:if="${#fields.hasErrors('username')}" class="alert" th:errors="*{username}"></p>
     </div>
 
-
-    <div class="form-group">
-      <label class="control-label" for="password"> Password: </label>
-      <input id="password" th:field="*{password}" placeholder="Password"
-             class="form-control mb-4 col-4" required autofocus="autofocus">
-      <p th:if="${#fields.hasErrors('password')}" th:errorclass="error" th:errors="*{password}" />
+    <div>
+      <label for="password">Password</label>
+      <input type="password" id="password" th:field="*{password}" placeholder="Password" required>
+      <p th:if="${#fields.hasErrors('password')}" class="alert" th:errors="*{password}"></p>
     </div>
 
-    <div class="form-group">
-      <label class="control-label" for="email"> Email: </label>
-      <input id="email" th:field="*{email}" placeholder="Email"
-             class="form-control mb-4 col-4" required autofocus="autofocus">
-      <p th:if="${#fields.hasErrors('email')}" th:errorclass="error" th:errors="*{email}" />
+    <div>
+      <label for="email">Email</label>
+      <input type="email" id="email" th:field="*{email}" placeholder="Email" required>
+      <p th:if="${#fields.hasErrors('email')}" class="alert" th:errors="*{email}"></p>
     </div>
 
-    <div class="form-group">
-      <button type="submit" class="btn btn-success">Sign Up</button>
-      <span>Already signed up? <a href="/" th:href="@{/login}"> Login Here </a></span>
-    </div>
+    <button type="submit">Sign Up</button>
+    <span>Already signed up? <a th:href="@{/login}">Login Here</a></span>
   </form>
 </div>
-
 </body>
 </html>

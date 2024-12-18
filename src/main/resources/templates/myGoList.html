@@ -71,7 +71,6 @@
             font-size: 1rem;
         }
 
-
         .hero h1 {
             font-size: 3rem;
             color: #543e5c;
@@ -85,6 +84,7 @@
             max-width: 600px;
             margin: auto;
         }
+
 
         .about-us h2 {
             font-size: 2.2rem;
@@ -100,12 +100,11 @@
             margin-bottom: 15px;
         }
 
-
-        .places {
+        .events {
             margin: 30px 0;
         }
 
-        .places h2 {
+        .events h2 {
             font-size: 2.5rem;
             margin-bottom: 20px;
             color: #543e5c;
@@ -125,14 +124,14 @@
             background-color: #543e5c;
         }
 
-        .place-list {
+        .event-list {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             gap: 20px;
             margin-top: 20px;
         }
 
-        .place-card {
+        .event-card {
             background-color:  #f6b7d7;
             border-radius: 10px;
             box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
@@ -140,73 +139,31 @@
             transition: all 0.3s ease;
         }
 
-        .place-card:hover {
+        .event-card:hover {
             transform: translateY(-5px);
         }
 
-        .place-img {
+        .event-img {
             width: 100%;
-            height: 180px;
+            height: 200px;
             object-fit: cover;
         }
 
-        .place-details {
+        .event-details {
             padding: 15px;
         }
 
-        .place-details h3 {
+        .event-details h3 {
             font-size: 1.4rem;
             color: #543e5c;
             margin-bottom: 10px;
         }
 
-        .place-details p {
+        .event-details p {
             font-size: 1rem;
             color: #543e5c;
         }
 
-        .reviews-btn {
-            display: inline-block;
-            margin-top: 10px;
-            padding: 8px 15px;
-            background-color: #cf3e81;
-            color: white;
-            border: none;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 1rem;
-            text-align: center;
-            text-decoration: none;
-        }
-
-        .reviews-btn:hover {
-            background-color: #543e5c;
-        }
-
-        .pagination {
-            text-align: center;
-            margin-top: 30px;
-        }
-
-        .page-btn {
-            padding: 10px 20px;
-            background-color: #cf3e81;
-            color: white;
-            border: none;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 1rem;
-        }
-
-        .page-btn:hover {
-            background-color: #543e5c;
-        }
-
-        .page-info {
-            font-size: 1.2rem;
-            color: #543e5c;
-            margin: 0 15px;
-        }
 
         .modal-profile {
             position: fixed;
@@ -251,10 +208,29 @@
             padding: 15px;
             color: #543e5c;
         }
+
+        .remove-btn {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 15px;
+            background-color: #cf3e81;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 1rem;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .remove-btn:hover {
+            background-color: #543e5c;
+        }
     </style>
 </head>
 <body>
 <div class="container">
+
     <header>
         <div class="logo"><i class="fas fa-solid fa-map-pin"></i>TapGo!</div>
         <nav>
@@ -302,88 +278,36 @@
         </div>
     </div>
 
+    <section class="events">
+        <h2>Go List</h2>
 
-    <section class="places">
-        <h2>Places</h2>
-        <div class="filter">
-           <h3>Filter Palces</h3>
-            <form th:action="@{/show/places}" method="get">
-                <div class="filter">
-                    <label for="city">City:</label>
-                    <select id="city" name="city">
-                        <option value="" th:selected="${param.city == null}">All</option>
-                        <option value="Almaty" th:selected="${param.city == 'Almaty'}">Almaty</option>
-                        <option value="Astana" th:selected="${param.city == 'Astana'}">Astana</option>
-                        <option value="Shymkent" th:selected="${param.city == 'Shymkent'}">Shymkent</option>
-                        <option value="Satpayev" th:selected="${param.city == 'Satpayev'}">Satpayev</option>
-                        <option value="Baiserke" th:selected="${param.city == 'Baiserke'}">Baiserke</option>
-                    </select>
+        <div class="event-list">
+            <div class="event-card" th:each="event : ${events}">
+                <img th:src="${event.photo}" alt="Event image" class="event-img"/>
+                <div class="event-details">
+                    <h3 th:text="${event.eventName}">Event Name</h3>
+                    <p><span th:text="${event.description}">Description</span></p>
+                    <p><span th:text="${event.date}">Date</span></p>
+                    <p><i class="fa-solid fa-map-marker-alt"></i> <span th:text="${event.place.location}">Event location</span></p>
 
-                    <label for="category">Category:</label>
-                    <select id="category" name="category">
-                        <option value="" th:selected="${param.category == null}">All</option>
-                        <option value="Parks and Outdoor Spaces" th:selected="${param.category == 'Parks and Outdoor Spaces'}">Parks and Outdoor Spaces</option>
-                        <option value="Museums and Cultural Centers" th:selected="${param.category == 'Museums and Cultural Centers'}">Museums and Cultural Centers</option>
-                        <option value="Restaurants and Cafes" th:selected="${param.category == 'Restaurants and Cafes'}">Restaurants and Cafes</option>
-                        <option value="Shopping Centers and Markets" th:selected="${param.category == 'Shopping Centers and Markets'}">Shopping Centers and Markets</option>
-                        <option value="Historical Sites" th:selected="${param.category == 'Historical Sites'}">Historical Sites</option>
-                        <option value="Entertainment Venues" th:selected="${param.category == 'Entertainment Venues'}">Entertainment Venues</option>
-                        <option value="Beaches and Waterfronts" th:selected="${param.category == 'Beaches and Waterfronts'}">Beaches and Waterfronts</option>
-                        <option value="Adventure and Sports" th:selected="${param.category == 'Adventure and Sports'}">Adventure and Sports</option>
-                        <option value="Religious and Spiritual Sites" th:selected="${param.category == 'Religious and Spiritual Sites'}">Religious and Spiritual Sites</option>
-                        <option value="Hotels and Accommodation" th:selected="${param.category == 'Hotels and Accommodation'}">Hotels and Accommodation</option>
-                    </select>
-
-                    <button type="submit" class="filter-btn">Apply Filters</button>
+                    <form th:action="@{/removeFromGoList/{eventId}(eventId=${event.eventId})}" method="post">
+                        <button type="submit" class="remove-btn">Remove</button>
+                    </form>
                 </div>
-            </form>
-
-        </div>
-        <div class="place-list">
-
-            <div class="place-card" th:each="place : ${places}">
-
-                    <img th:src="${place.photos}" alt="Place image" class="place-img"/>
-                    <div class="place-details">
-                        <h3 th:text="${place.placeName}">Place Name</h3>
-                        <p><i class="fa-solid fa-map-marker-alt"></i> <span th:text="${place.location}">2GIS</span></p>
-                        <p>Category: <span th:text="${place.category}">Cafe</span></p>
-                        <p>Rating: <span th:text="${place.averageRating}">4.5</span></p>
-                        <a th:href="@{/show/place/{placeId}(placeId=${place.placeId})}" class="reviews-btn">Reviews</a>
-                        <a th:if="${user.role == 'ADMIN'}" th:href="@{/edit/place/{placeId}(placeId=${place.placeId})}" class="reviews-btn">Details</a>
-                    </div>
             </div>
-        </div>
-
-        <div class="pagination">
-            <button th:if="${currentPage > 0}" th:onclick="'location.href=\'/show/places?page=' + ${currentPage - 1} + '\''" class="page-btn prev-btn">
-                &#10094; Prev
-            </button>
-            <span class="page-info">
-            <span th:text="${currentPage + 1}"></span> / <span th:text="${totalPages}"></span>
-        </span>
-            <button th:if="${currentPage < totalPages - 1}" th:onclick="'location.href=\'/show/places?page=' + ${currentPage + 1} + '\''" class="page-btn next-btn">
-                Next &#10095;
-            </button>
-        </div>
-
-
-        <div class="new-place-btn" th:if="${user.role == 'ADMIN'}">
-            <a href="/create/place" class="page-btn new-place">
-                New Place
-            </a>
         </div>
     </section>
 </div>
 
 <script>
+
     function toggleProfile() {
         const modal = document.getElementById('modal-profile');
         modal.classList.toggle('active');
     }
 
-</script>
 
+</script>
 
 </body>
 </html>

@@ -4,12 +4,15 @@ package com.example.tapgo.controller;
 import com.example.tapgo.entity.Place;
 import com.example.tapgo.entity.Review;
 import com.example.tapgo.entity.User;
+import com.example.tapgo.repository.PlaceRepository;
+import com.example.tapgo.repository.ReviewRepository;
 import com.example.tapgo.repository.UserRepository;
 import com.example.tapgo.service.EmailService;
 import com.example.tapgo.service.PlaceService;
 import com.example.tapgo.service.ReviewService;
 import com.example.tapgo.service.UserService;
 import jakarta.validation.Valid;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,78 +21,83 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
 public class ReviewController {
 
+    private final PlaceRepository placeRepository;
+    private final ReviewRepository reviewRepository;
     private UserService userService;
     private ReviewService reviewService;
     private PlaceService placeService;
 
     public ReviewController(ReviewService reviewService,
                             UserService userService,
-                            PlaceService placeService) {
+                            PlaceService placeService, PlaceRepository placeRepository, ReviewRepository reviewRepository) {
         this.reviewService = reviewService;
         this.userService = userService;
         this.placeService = placeService;
+        this.placeRepository = placeRepository;
+        this.reviewRepository = reviewRepository;
     }
 
-    @GetMapping("/reviews")
-    public String listReviews(Model model) {
-        List<Review> reviews = reviewService.getAllReviews();
-        model.addAttribute("reviews", reviews);
-        return "reviews";
-    }
 
-    @GetMapping("/addReview/{placeId}")
-    public String newReviewForm(@PathVariable Long placeId,
+    // CREATE A REVIEW
+    @GetMapping("/add/review/{placeId}")
+    public String addReviewPage(@PathVariable("placeId") Long place_id,
                                 Model model,
-                                Principal principal) {
-        String username = principal.getName();
+                                Authentication authentication){
+        String username = authentication.getName();
         User user = userService.findByUsername(username);
-        Place place = placeService.findByPlaceId(placeId);
-
-        model.addAttribute("user", user);
+        Place place = placeService.findByPlaceId(place_id);
+        Review review = new Review();
         model.addAttribute("place", place);
-        model.addAttribute("review", new Review());
-
-        return "new-review";
+        model.addAttribute("review", review);
+        model.addAttribute("user", user);
+        return "review-form";
     }
 
 
-    @PostMapping("/addReview/{placeId}")
-    public String addReview(@PathVariable Long placeId,
-                            @Valid @ModelAttribute Review review,
-                            Principal principal,
-                            Model model) {
-        String username = principal.getName();
+    // POST REQUEST OF CREATING A REVIEW
+    @PostMapping("/add/review/{placeId}")
+    public String addReview(@PathVariable("placeId") Long placeId,
+                            @ModelAttribute("review") Review review,
+                            Authentication authentication) {
+        String username = authentication.getName();
         User user = userService.findByUsername(username);
         Place place = placeService.findByPlaceId(placeId);
-
-        review.setUser(user);
         review.setPlace(place);
+        review.setUser(user);
+        reviewRepository.save(review);
 
-        reviewService.save(review);
-
-        return "redirect:/places/";
+        return "redirect:/show/place/" + placeId;
     }
 
-    @GetMapping("/updateReview")
-    public String showFormForUpdate(@PathVariable Long id, Model model, Principal principal) {
-        String username = principal.getName();
+
+    // VIEW PLACE BY ID
+    @GetMapping("/show/place/{placeId}")
+    public String getPlaceDetails(@PathVariable("placeId") Long place_id,
+                                  Model model,
+                                  Authentication authentication) {
+        Place place = placeService.findByPlaceId(place_id);
+        String username = authentication.getName();
         User user = userService.findByUsername(username);
+
+        List<Review> reviews = reviewRepository.findAll();
+
+        List<Review> placeReviews = new ArrayList<>();
+        for (Review review : reviews) {
+            if (review.getPlace().getPlaceId().equals(place_id)) {
+                placeReviews.add(review);
+            }
+        }
+
+        model.addAttribute("place", place);
+        model.addAttribute("reviews", placeReviews);
         model.addAttribute("user", user);
-
-        Review review = reviewService.getReviewById(id);
-        model.addAttribute("review", review);
-        return "update-task";
+        return "place-review";
     }
 
-
-    @GetMapping("/deleteReview/{id}")
-    public String deleteReview(@PathVariable("id") Long id) {
-        this.reviewService.deleteReview(id);
-        return "redirect:/reviews";
-    }
 }

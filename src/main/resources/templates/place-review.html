@@ -69,11 +69,105 @@
       border-radius: 20px;
       color: #fff;
       font-size: 1rem;
-      cursor: pointer;
-      transition: 0.3s;
     }
-    .user-info:hover {
-      background-color: #af3369;
+
+
+    .main-content {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      margin-top: 30px;
+    }
+
+    .place-details {
+      background-color: #f6b7d7;
+      border-radius: 20px;
+      padding: 20px;
+      width: 45%;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .place-details img {
+      width: 100%;
+      height: 300px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+
+    .place-details h2 {
+      font-size: 1.5rem;
+      color: #543e5c;
+      margin-bottom: 15px;
+      text-align: left;
+    }
+
+    .place-details p {
+      font-size: 1.1rem;
+      margin: 10px 0;
+      color: #543e5c;
+      line-height: 1.6;
+    }
+
+    .reviews {
+      background-color: #f8e1e8;
+      border-radius: 20px;
+      padding: 20px;
+      width: 45%;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .reviews h3 {
+      font-size: 2rem;
+      color: #543e5c;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+
+    .review-item {
+      background-color: #fff;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      transition: box-shadow 0.3s ease;
+    }
+
+    .review-item:hover {
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .review-item p {
+      margin: 5px 0;
+      color: #543e5c;
+    }
+
+    .review-item strong {
+      font-size: 1.1rem;
+      color: #cf3e81;
+    }
+
+    .add-review-btn {
+      display: block;
+      margin: 20px auto 0;
+      background-color: #cf3e81;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 1rem;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .add-review-btn:hover {
+      background-color: #543e5c;
+    }
+
+    @media (max-width: 768px) {
+      .place-details, .reviews {
+        width: 100%;
+      }
     }
 
     .modal-profile {
@@ -120,55 +214,6 @@
       color: #543e5c;
     }
 
-
-    .hero {
-      text-align: center;
-      margin: 40px 0;
-      background-color: #f6b7d7;
-      padding: 5px 10px;
-      border-radius: 20px;
-      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
-    }
-
-    .hero h1 {
-      font-size: 3rem;
-      color: #543e5c;
-      margin-bottom: 10px;
-      font-weight: 600;
-    }
-
-    .hero p {
-      font-size: 1.2rem;
-      color: #543e5c;
-      max-width: 600px;
-      margin: auto;
-    }
-
-    .about-us {
-      background-color: #f6b7d7;
-      padding: 10px;
-      border-radius: 20px;
-      text-align: center;
-      margin-bottom: 20px;
-      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-    }
-
-    .about-us h2 {
-      font-size: 2.2rem;
-      margin-bottom: 15px;
-      color: #543e5c;
-      font-weight: 700;
-    }
-
-    .about-us p {
-      font-size: 1rem;
-      color: #543e5c;
-      line-height: 1.6;
-      margin-bottom: 15px;
-    }
-
-
-
   </style>
 </head>
 <body>
@@ -183,9 +228,8 @@
         <li><a href="/main" class="active"><i class="fas fa-info-circle"></i> About Us</a></li>
       </ul>
     </nav>
-    <div class="user-info" onclick="toggleProfile()"><i class="fas fa-user"></i>Hi, <span th:text="${username}">User</span>!</div>
+    <div class="user-info" onclick="toggleProfile()"><i class="fas fa-user"></i>Hi, <span th:text="${user.username}">User</span>!</div>
   </header>
-
 
   <div class="modal-profile" id="modal-profile">
     <div class="modal-header">
@@ -194,12 +238,10 @@
     </div>
     <div class="modal-content">
       <div style="text-align: center; margin-bottom: 15px;">
-        <img th:if="${user.profilePhoto!= null}" th:src="${profilePhoto}" alt="User Photo"
-             style="border-radius: 50%; width: 100px; height: 100px; object-fit: cover;">
-        <img th:if="${user.profilePhoto == null}" th:src="@{/images/default-profile-picture.webp}" alt="Default User Photo"
+        <img th:src="${user.profilePhoto}" alt="User Photo"
              style="border-radius: 50%; width: 100px; height: 100px; object-fit: cover;">
       </div>
-      <form th:action="@{'/uploadP/' + ${userId}}" method="post" enctype="multipart/form-data">
+      <form th:action="@{'/uploadP/' + ${user.userId}}" method="post" enctype="multipart/form-data">
         <div style="margin-top: 15px; text-align: center;">
           <input type="file" name="profilePhoto" accept="image/*" required>
           <button type="submit" style="margin-top: 10px; background-color: #cf3e81; color: white; padding: 5px 10px;
@@ -208,9 +250,9 @@
           </button>
         </div>
       </form>
-      <p><i class="fas fa-user"></i><strong>Name:</strong> <span th:text="${username}"></span></p>
-      <p><i class="fas fa-envelope"></i><strong>Email:</strong><span th:text="${email}">user@example.com</span></p>
-      <p><i class="fas fa-user-shield"></i><strong>Role:</strong> <span th:text="${role}">User</span></p>
+      <p><i class="fas fa-user"></i><strong>Name:</strong> <span th:text="${user.username}"></span></p>
+      <p><i class="fas fa-envelope"></i><strong>Email:</strong><span th:text="${user.email}">user@example.com</span></p>
+      <p><i class="fas fa-user-shield"></i><strong>Role:</strong> <span th:text="${user.role}">User</span></p>
 
       <div style="margin-top: 20px; text-align: center;">
         <form th:action="@{/logout}" method="post">
@@ -223,33 +265,36 @@
     </div>
   </div>
 
-  <script>
-    function toggleProfile() {
-      const modal = document.getElementById('modal-profile');
-      modal.classList.toggle('active');
-    }
-
-  </script>
-
-
-
+  <div class="main-content">
+    <div class="place-details">
+      <img th:src="@{${place.photos}}" alt="Place Image">
+      <h2 th:text="${place.placeName}">Place Name</h2>
+      <p><strong>Location:</strong> <span th:text="${place.location}">location</span></p>
+      <p><strong>Category:</strong> <span th:text="${place.category}">category</span></p>
+      <p><strong>City:</strong> <span th:text="${place.city}">city</span></p>
+    </div>
 
 
+    <div class="reviews">
+      <h3>Reviews</h3>
+      <div th:each="review : ${reviews}" class="review-item">
+        <p><strong th:text="${review.user.username}">Author</strong> - <span th:text="${review.rating}">Rating</span>/5</p>
+        <p th:text="${review.description}">Review comment</p>
+      </div>
+      <a th:href="@{/add/review/{placeId}(placeId=${place.placeId})}" class="add-review-btn">Add Review</a>
 
-  <section class="hero">
-    <h1>Welcome, <span th:text="${username}">User</span>!</h1>
-    <p>Explore amazing places and events with TapGo!</p>
-  </section>
+    </div>
 
-
-  <section class="about-us">
-    <h2>About Us</h2>
-    <p>We are a team of passionate third-year students, working on our first Java project—TapGo!</p>
-    <p>Our app helps you discover exciting places and events around you.</p>
-    <p>With love, <br>The TapGo! Team <span style="color: #cf3e81;">💖</span></p>
-  </section>
-
-
+  </div>
 </div>
+
+<script>
+  function toggleProfile() {
+    const modal = document.getElementById('modal-profile');
+    modal.classList.toggle('active');
+  }
+
+</script>
+
 </body>
 </html>

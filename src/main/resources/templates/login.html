@@ -6,11 +6,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Poppins:wght@500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        /* General Styles */
         body {
             font-family: 'Poppins', sans-serif;
-            background-color: #fef1f6; /* Soft pink background */
-            color: #5a3d55; /* Dark purple text */
+            background-color: #f8e1e8;
+            color: #5a3d55;
             margin: 0;
             padding: 0;
             display: flex;
@@ -19,9 +18,9 @@
             min-height: 100vh;
         }
 
-        /* Container */
+
         .login-container {
-            background-color: #ffffff; /* White background */
+            background-color: #f6b7d7;
             border-radius: 20px;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
             padding: 40px 50px;
@@ -30,17 +29,16 @@
             text-align: center;
         }
 
-        /* Logo/Header */
         .header-container h1 {
-            color: #cf3e81; /* Highlight color */
-            font-weight: 700;
-            margin-bottom: 20px;
-            font-size: 2rem;
+            color: #543e5c;
+            font-weight: 1000;
+            margin-bottom: 5px;
+            font-size: 2.5rem;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
 
-        /* Form Fields */
+
         form {
             display: flex;
             flex-direction: column;
@@ -48,33 +46,36 @@
         }
 
         form label {
-            font-weight: 600;
-            color: #5a3d55; /* Dark purple */
-            text-align: left;
+            font-weight: 900;
+            color: #5a3d55;
+            text-align: center;
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
+            font-size: 1.2rem;
         }
 
         form input {
             padding: 10px;
-            border: 2px solid #e6b8cc; /* Light pink border */
-            border-radius: 10px;
-            font-size: 1rem;
+            border: 3px solid #cf3e81;
+            border-radius: 25px;
+            font-size: 0.9rem;
             outline: none;
             transition: all 0.3s ease;
+            width: 100%;
+            max-width: 420px;
+            margin: 0 auto;
         }
 
         form input:focus {
-            border-color: #cf3e81; /* Highlight color */
+            border-color: #cf3e81;
             box-shadow: 0 0 5px rgba(207, 62, 129, 0.3);
         }
 
-        /* Buttons */
         button {
-            background-color: #cf3e81; /* Highlight color */
+            background-color: #cf3e81;
             color: #fff;
             border: none;
-            border-radius: 10px;
+            border-radius: 20px;
             padding: 10px;
             font-size: 1.1rem;
             font-weight: 600;
@@ -83,17 +84,17 @@
         }
 
         button:hover {
-            background-color: #ab3268; /* Darker pink */
+            background-color: #ab3268;
         }
 
-        /* Links */
+
         span, a {
-            font-size: 0.9rem;
+            font-size: 1rem;
             color: #5a3d55;
         }
 
         a {
-            color: #cf3e81; /* Highlight color */
+            color: #cf3e81;
             text-decoration: none;
             font-weight: 600;
         }
@@ -102,7 +103,7 @@
             text-decoration: underline;
         }
 
-        /* Error Message */
+
         .alert {
             background-color: #ffdddd;
             color: #a94442;
@@ -112,10 +113,11 @@
             font-size: 0.9rem;
         }
 
-        /* Top Navigation */
+
         .topnav {
             text-align: right;
             margin-bottom: 20px;
+            text-decoration: underline;
         }
 
         .topnav a {
@@ -130,20 +132,18 @@
         }
     </style>
 </head>
+
+
 <body>
-<!-- Main Container -->
 <div class="login-container">
-    <!-- Top Navigation -->
     <div class="topnav">
         <a th:href="@{/register}">Sign Up</a>
     </div>
 
-    <!-- Header -->
     <div class="header-container">
         <h1>Login</h1>
     </div>
 
-    <!-- Login Form -->
     <form th:action="@{/login}" method="post">
         <div th:if="${error}" class="alert" th:text="${error}"></div>
 
@@ -157,8 +157,6 @@
         </div>
         <button type="submit">Login</button>
 
-        <!-- Forgot Password -->
-        <span>Forgot password? <a th:href="@{/forgotPassword}">Reset Password</a></span>
     </form>
 </div>
 </body>

@@ -1,11 +1,8 @@
 package com.example.tapgo.service;
 
-import com.example.tapgo.controller.PlaceController;
 import com.example.tapgo.entity.Place;
 import com.example.tapgo.repository.PlaceRepository;
-import jakarta.persistence.Column;
 import jakarta.transaction.Transactional;
-import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -103,5 +100,13 @@ public class PlaceService {
         return placeRepository.findAllWithReviews();
     }
 
-
+    public List<Place> filtrbyCity(String city){
+        return placeRepository.findByCity(city);
+    }
+    public List<Place> filtrbyCategory(String category){
+        return placeRepository.findByCategory(category);
+    }
+    public List<Place> filtrbyCityandCategory(String city,String category){
+        return placeRepository.findByCityAndCategory(city,category);
+    }
 }

@@ -1,129 +1,94 @@
 package com.example.tapgo.controller;
 
 import com.example.tapgo.entity.Event;
-import com.example.tapgo.entity.Place;
 import com.example.tapgo.entity.User;
 import com.example.tapgo.service.EventService;
-import com.example.tapgo.service.PlaceService;
 import com.example.tapgo.service.UserService;
-import jakarta.validation.Valid;
-import lombok.NoArgsConstructor;
-import lombok.Value;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import java.security.Principal;
 import java.util.List;
-import java.util.Optional;
 
 
 @Controller
 public class EventController {
 
     private final UserService userService;
-    private final PlaceService placeService;
-    private EventService eventService;
+    private final EventService eventService;
 
-    public EventController(EventService eventService, UserService userService, PlaceService placeService) {
+    public EventController(EventService eventService, UserService userService) {
         this.eventService = eventService;
         this.userService = userService;
-        this.placeService = placeService;
     }
 
+
+    //LIST EVENTS
     @GetMapping("/events")
-    public String listEvents(Model model) {
-        List<Event> events = eventService.getAllEv();
+    public String listEvents(Model model,
+                             Authentication authentication){
+        String username = authentication.getName();
+        User user = userService.findByUsername(username);
+
+        List<Event> events = eventService.getAll();
         model.addAttribute("events", events);
-        return "events";
-    }
+        model.addAttribute("user",user);
 
-    @GetMapping("/myevents")
-    public String listMyEvents(Model model, Principal principal) {
-        String currentUsername = principal.getName();
-        List<Event>myEv=eventService.getEvByUser(currentUsername);
-        model.addAttribute("events",myEv);
-        return "myevents";
+        return "event-list";
     }
 
 
-    @GetMapping("addEvent/{placeId}")
-    public String newEventForm(@PathVariable("placeId") Long placeId,
-                           @Valid @ModelAttribute Event event,
-                           Model model,
-                           Principal principal) {
-        String username = principal.getName();
-        User user = userService.findByUsername(username);
-        model.addAttribute("user", user);
-
-        Place place = placeService.findByPlaceId(placeId);
-        model.addAttribute("place", place);
-
-        model.addAttribute("event", event);
-        return "event";
-    }
-
-    @PostMapping("addEvent/{placeId}")
-    public String addEvent(@PathVariable("placeId") Long placeId,
-                           @Valid @ModelAttribute Event event,
-                           Principal principal,
-                           Model model) {
-        String username = principal.getName();
-        User user = userService.findByUsername(username);
-        Place place = placeService.findByPlaceId(placeId);
-
-        event.setUser(user);
-        event.setPlace(place);
-
-        eventService.saveEv(event);
-
-        return "redirect:/places/";
-    }
-
-    @GetMapping("/editEvent/{eventId}")
-    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
-    public String editEventForm(@PathVariable Long eventId, Model model, RedirectAttributes redirectAttributes) {
+    // ADDING EVENT TO A GO LIST OF USER
+    @PostMapping("/addToGoList/{id}")
+    public String addToGoList(@PathVariable("id") Long id,
+                              Principal principal,
+                              RedirectAttributes redirectAttributes) {
         try {
-            Event event = eventService.getEvbyId(eventId);
-            model.addAttribute("event", event);
-            return "editEvent";
-        } catch (IllegalArgumentException e) {
-            redirectAttributes.addFlashAttribute("error", e.getMessage());
-            return "redirect:/events";
-        }
-    }
+            String username = principal.getName();
+            User user = userService.findByUsername(username);
+            Event event = eventService.getEvbyId(id);
+            List<Event> go_list = user.getGoList();
 
-
-    @PostMapping("/editEvent/{eventId}")
-    @PreAuthorize("hasAuthority('USER') or hasAuthority('ADMIN')")
-    public String updateEvent(
-            @PathVariable Long eventId,
-            @ModelAttribute Event updateEv,
-            @RequestParam(required = false) MultipartFile photoFile,
-            RedirectAttributes redirectAttributes) {
-        try {
-            eventService.updateEv(eventId, updateEv, photoFile);
-            redirectAttributes.addFlashAttribute("success", "Event updated successfully!");
-        } catch (IllegalArgumentException e) {
-            redirectAttributes.addFlashAttribute("error", "Invalid event ID");
+            if (!go_list.contains(event)) {
+                go_list.add(event);
+                userService.save(user);
+                redirectAttributes.addFlashAttribute("success", "Событие добавлено в Go-List!");
+            } else {
+                redirectAttributes.addFlashAttribute("info", "Событие уже есть в вашем Go-List.");
+            }
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Error updating event: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("error", "Ошибка: " + e.getMessage());
         }
         return "redirect:/events";
     }
 
 
-    @GetMapping("/deleteEvent/{eventId}")
-    public String deleteEvent(@PathVariable("eventId") Long eventId) {
-        this.eventService.deleteEv(eventId);
-        return "redirect:/events";
+
+    // LIST OF GO LIST OF A USER
+    @GetMapping("/myGoList")
+    public String myGoList(Model model, Principal principal) {
+        String username = principal.getName();
+        User user = userService.findByUsername(username);
+
+        model.addAttribute("user", user);
+        model.addAttribute("username", username);
+        model.addAttribute("events", user.getGoList());
+        return "myGoList";
     }
+
+
+    // REMOVING AN EVENT FROM THE GO LIST
+    @PostMapping("/removeFromGoList/{eventId}")
+    public String removeFromGoList(@PathVariable("eventId") Long eventId, Principal principal) {
+        User user = userService.findByUsername(principal.getName());
+
+        eventService.removeEventFromGoList(user, eventId);
+
+        return "redirect:/myGoList";
+    }
+
 
 
 }

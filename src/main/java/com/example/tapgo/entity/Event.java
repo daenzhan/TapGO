@@ -1,15 +1,19 @@
 package com.example.tapgo.entity;
 
 import jakarta.persistence.*;
+import jakarta.transaction.Transactional;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-
+@Table
+@Transactional
 @Entity
 public class Event {
 
@@ -35,7 +39,6 @@ public class Event {
     @JoinColumn(name = "place_id")
     private Place place;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @ManyToMany(mappedBy = "goList", fetch = FetchType.EAGER)
+    private List<User> usersInGoList = new ArrayList<>();
 }

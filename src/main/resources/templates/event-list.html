@@ -5,11 +5,12 @@
     <title>TapGo! Main Page</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         body {
             font-family: 'Montserrat', sans-serif;
-            background-color: #f8e1e8; /* Light pink */
-            color: #543e5c; /* Dark purple */
+            background-color: #f8e1e8;
+            color: #543e5c;
             margin: 0;
             padding: 0;
             line-height: 1.7;
@@ -21,10 +22,10 @@
             padding: 20px 0;
         }
 
-        /* Header Section */
+
         header {
-            background-color: #f6b7d7; /* Soft pink */
-            color: #543e5c; /* Dark purple */
+            background-color: #f6b7d7;
+            color: #543e5c;
             padding: 15px 20px;
             border-bottom-left-radius: 30px;
             border-bottom-right-radius: 30px;
@@ -39,7 +40,7 @@
             font-size: 2rem;
             font-weight: 800;
             letter-spacing: 1px;
-            color: #cf3e81; /* Dark purple */
+            color: #cf3e81;
         }
 
         nav ul {
@@ -52,79 +53,55 @@
 
         nav a {
             text-decoration: none;
-            color: #543e5c; /* Dark purple */
+            color: #543e5c;
             font-weight: 700;
             font-size: 1rem;
             transition: all 0.3s ease;
         }
 
         nav a:hover, nav a.active {
-            color: #cf3e81; /* Lighter pink */
+            color: #cf3e81;
             text-decoration: underline;
         }
 
         .user-info {
-            background-color: #cf3e81; /* Lighter pink */
+            background-color: #cf3e81;
             padding: 6px 12px;
             border-radius: 20px;
             color: #fff;
             font-size: 1rem;
         }
 
-        /* Hero Section */
-        .hero {
-            text-align: center;
-            margin: 40px 0;
-            background-color: #f6b7d7; /* Soft pink */
-            padding: 5px 10px;
-            border-radius: 20px;
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
-        }
 
         .hero h1 {
             font-size: 3rem;
-            color: #543e5c; /* Dark purple */
+            color: #543e5c;
             margin-bottom: 10px;
             font-weight: 600;
         }
 
         .hero p {
             font-size: 1.2rem;
-            color: #543e5c; /* Dark purple */
+            color: #543e5c;
             max-width: 600px;
             margin: auto;
         }
 
-        /* About Us Section */
-        .about-us {
-            background-color: #f6b7d7; /* Soft pink */
-            padding: 10px;
-            border-radius: 20px;
-            text-align: center;
-            margin-bottom: 20px;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
-        }
 
         .about-us h2 {
             font-size: 2.2rem;
             margin-bottom: 15px;
-            color: #543e5c; /* Dark purple */
+            color: #543e5c;
             font-weight: 700;
         }
 
         .about-us p {
             font-size: 1rem;
-            color: #543e5c; /* Dark purple */
+            color: #543e5c;
             line-height: 1.6;
             margin-bottom: 15px;
         }
 
-        .highlight {
-            color: #cf3e81; /* Lighter pink */
-            font-weight: 600;
-        }
-
-        /* Events Section */
         .events {
             margin: 30px 0;
         }
@@ -132,22 +109,36 @@
         .events h2 {
             font-size: 2.5rem;
             margin-bottom: 20px;
-            color: #543e5c; /* Dark purple */
+            color: #543e5c;
         }
 
-        .filter-btn {
-            padding: 8px 16px;
-            margin: 5px;
-            background-color: #cf3e81; /* Lighter pink */
-            color: white;
-            border: none;
-            border-radius: 20px;
-            cursor: pointer;
+
+        .sort-filter form {
+            display: flex;
+            align-items: center;
         }
 
-        .filter-btn:hover {
-            background-color: #543e5c; /* Dark purple */
+        .sort-filter label {
+            margin-right: 10px;
         }
+
+
+        .select-container select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #543e5c;
+            border-radius: 5px;
+            background-color: #f6b7d7;
+            color: #543e5c;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+
+        .select-container select:focus {
+            background-color: #f8e1e8;
+        }
+
 
         .event-list {
             display: grid;
@@ -170,7 +161,7 @@
 
         .event-img {
             width: 100%;
-            height: 200px;
+            height: 400px;
             object-fit: cover;
         }
 
@@ -186,81 +177,158 @@
 
         .event-details p {
             font-size: 1rem;
+            color: white;
+        }
+
+        .modal-profile {
+            position: fixed;
+            right: 0;
+            top: 0;
+            width: 350px;
+            height: 100vh;
+            background-color: #fff;
+            box-shadow: -4px 0 12px rgba(0, 0, 0, 0.2);
+            transform: translateX(100%);
+            transition: transform 0.5s ease;
+            z-index: 1000;
+        }
+        .modal-profile.active {
+            transform: translateX(0);
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .modal-header h2 {
+            margin: 0;
             color: #543e5c;
         }
 
-        .pagination {
-            text-align: center;
-            margin-top: 30px;
+        .modal-header .close-btn {
+            font-size: 1.5rem;
+            color: #cf3e81;
+            cursor: pointer;
+            transition: 0.3s;
         }
 
-        .page-btn {
-            padding: 10px 20px;
+        .modal-header .close-btn:hover {
+            color: #af3369;
+        }
+
+        .modal-content {
+            padding: 15px;
+            color: #543e5c;
+        }
+
+        .baramyn-btn {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 15px;
             background-color: #cf3e81;
             color: white;
             border: none;
             border-radius: 20px;
             cursor: pointer;
             font-size: 1rem;
+            text-align: center;
+            text-decoration: none;
         }
 
-        .page-btn:hover {
-            background-color: #543e5c; /* Dark purple */
-        }
-
-        .page-info {
-            font-size: 1.2rem;
-            color: #543e5c;
-            margin: 0 15px;
+        .baramyn-btn:hover {
+            background-color: #543e5c;
         }
     </style>
 </head>
 <body>
 <div class="container">
-    <!-- Header -->
     <header>
-        <div class="logo">TapGo!</div>
+        <div class="logo"><i class="fas fa-solid fa-map-pin"></i>TapGo!</div>
         <nav>
             <ul>
-                <li><a href="/places">Places</a></li>
-                <li><a href="/events" class="active">Events</a></li>
-                <li><a href="/my-events">My Events</a></li>
-                <li><a href="/about">About Us</a></li>
+
+                <li><a href="/show/places"><i class="fas fa-map-marked-alt"></i> Places</a></li>
+                <li><a href="/events"><i class="fas fa-calendar-alt"></i> Events</a></li>
+                <li><a href="/myGoList"><i class="fas fa-list"></i> Go List</a></li>
+                <li><a href="/main" class="active"><i class="fas fa-info-circle"></i> About Us</a></li>
+
             </ul>
         </nav>
-        <div class="user-info">Hi, <span th:text="${name}">User</span>!</div>
+        <div class="user-info" onclick="toggleProfile()"><i class="fas fa-user"></i>Hi, <span th:text="${user.username}">User</span>!</div>
     </header>
 
-    <!-- Events Section -->
+    <div class="modal-profile" id="modal-profile">
+        <div class="modal-header">
+            <h2>User Profile</h2>
+            <span class="close-btn" onclick="toggleProfile()">×</span>
+        </div>
+        <div class="modal-content">
+            <div style="text-align: center; margin-bottom: 15px;">
+                <img th:src="${user.profilePhoto}" alt="User Photo"
+                     style="border-radius: 50%; width: 100px; height: 100px; object-fit: cover;">
+            </div>
+            <form th:action="@{'/uploadP/' + ${user.userId}}" method="post" enctype="multipart/form-data">
+                <div style="margin-top: 15px; text-align: center;">
+                    <input type="file" name="profilePhoto" accept="image/*" required>
+                    <button type="submit" style="margin-top: 10px; background-color: #cf3e81; color: white; padding: 5px 10px;
+                                     border: none; border-radius: 5px; cursor: pointer;"><i class="fas fa-pencil-alt"></i>
+                        Upload Photo
+                    </button>
+                </div>
+            </form>
+            <p><i class="fas fa-user"></i><strong>Name:</strong> <span th:text="${user.username}"></span></p>
+            <p><i class="fas fa-envelope"></i><strong>Email:</strong><span th:text="${user.email}">user@example.com</span></p>
+            <p><i class="fas fa-user-shield"></i><strong>Role:</strong> <span th:text="${user.role}">User</span></p>
+
+            <div style="margin-top: 20px; text-align: center;">
+                <form th:action="@{/logout}" method="post">
+                    <button type="submit" style="background-color: #cf3e81; color: white; padding: 8px 16px;
+                                    border: none; border-radius: 20px; cursor: pointer;"><i class="fas fa-sign-out-alt"></i>
+                        Logout
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <section class="events">
         <h2>Events</h2>
-        <div class="filter">
-            <button class="filter-btn">All</button>
-            <button class="filter-btn">City</button>
-        </div>
         <div class="event-list">
-            <div class="event-card" th:each="event : ${events.content}">
+            <div class="event-card" th:each="event : ${events}">
                 <img th:src="${event.photo}" alt="Event image" class="event-img"/>
                 <div class="event-details">
                     <h3 th:text="${event.eventName}">Event Name</h3>
                     <p><span th:text="${event.description}">Description</span></p>
+                    <p><span th:text="${event.date}">Date</span></p>
                     <p><i class="fa-solid fa-map-marker-alt"></i> <span th:text="${event.place.location}">Event location</span></p>
+
+
+                    <form th:action="@{/addToGoList/{id}(id=${event.eventId})}" method="post">
+                        <button type="submit" class="baramyn-btn">Baramyn</button>
+                    </form>
+
+
+
                 </div>
             </div>
         </div>
-        <!-- Pagination Controls -->
-        <div class="pagination">
-            <button th:if="${currentPage > 0}" th:onclick="'location.href=\'/show/events?page=' + ${currentPage - 1} + '\''" class="page-btn prev-btn">
-                &#10094; Prev
-            </button>
-            <span class="page-info">
-            <span th:text="${currentPage + 1}"></span> / <span th:text="${totalPages}"></span>
-        </span>
-            <button th:if="${currentPage < totalPages - 1}" th:onclick="'location.href=\'/show/events?page=' + ${currentPage + 1} + '\''" class="page-btn next-btn">
-                Next &#10095;
-            </button>
-        </div>
     </section>
 </div>
+
+<script>
+
+    function toggleProfile() {
+        const modal = document.getElementById('modal-profile');
+        modal.classList.toggle('active');
+    }
+
+    // function loadContent(section) {
+    //     document.getElementById('dynamic-content').innerHTML = `<h2>${section.charAt(0).toUpperCase() + section.slice(1)}</h2><p>Content for ${section} goes here.</p>`;
+    // }
+</script>
+
 </body>
 </html>

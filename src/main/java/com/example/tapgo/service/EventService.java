@@ -6,51 +6,24 @@ import com.example.tapgo.entity.User;
 import com.example.tapgo.repository.EventRepository;
 import com.example.tapgo.repository.PlaceRepository;
 import com.example.tapgo.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class EventService {
     private final EventRepository eventRepository;
-    private final PlaceRepository placeRepository;
     private final UserRepository userRepository;
 
     public EventService(EventRepository eventRepository,
-                        PlaceRepository placeRepository,
                         UserRepository userRepository) {
         this.eventRepository = eventRepository;
-        this.placeRepository = placeRepository;
         this.userRepository = userRepository;
     }
 
-    public List<Event> getEvByUser(String username) {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found: " + username));
-        return eventRepository.findByUser(user);
-    }
 
-    public void saveEvByUsername(Event event, String username) {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("User not found: " + username));
-        event.setUser(user);
-        eventRepository.save(event);
-    }
-
-    public  void saveEv(Event ev) {
-        eventRepository.save(ev);
-    }
-
-
-    public List<Event> getAllEv(){
+    public List<Event> getAll() {
         return eventRepository.findAll();
     }
 
@@ -59,55 +32,14 @@ public class EventService {
         return eventRepository.findByEventId(eventId).orElseThrow(() -> new IllegalArgumentException("Event not found with ID: " + eventId));
     }
 
+    public void removeEventFromGoList(User user, Long eventId) {
+        List<Event> goList = user.getGoList();
 
-    public Event getByEvName(String eventName){
-        return eventRepository.findByEventName(eventName).orElse(null);
+        goList.removeIf(event -> event.getEventId().equals(eventId));
+
+        userRepository.save(user);
     }
 
 
-    public Event newEv(Event ev) {
-        if (eventRepository.findByEventName(ev.getEventName()).isPresent()) {
-            throw new IllegalArgumentException("Event name alredy exists");
-        }
-        return eventRepository.save(ev);
-    }
 
-
-    public  void updateEv(Long eventId, Event updateEv, MultipartFile photoF){
-        Event ex=getEvbyId(eventId);
-        if (ex == null) {
-            throw new IllegalArgumentException("Event not found with ID: " + eventId);
-        }
-        if (updateEv.getEventName() != null && !updateEv.getEventName().isEmpty()) {
-            ex.setEventName(updateEv.getEventName());
-        }
-        if (updateEv.getDescription() != null && !updateEv.getDescription().isEmpty()) {
-            ex.setDescription(updateEv.getDescription());
-        }
-        if (photoF != null && !photoF.isEmpty()) {
-            try {
-                String fileName = photoF.getOriginalFilename();
-                String uploadDir ="C:\\Users\\baite\\IdeaProjects\\TapGO\\src\\main\\resources\\static\\images\\";
-                Path filePath = Paths.get(uploadDir + fileName);
-                Files.copy(photoF.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-                ex.setPhoto("/images/" + fileName);
-            } catch (IOException e) {
-                throw new RuntimeException("Failed to save photo: " + e.getMessage(), e);
-            }
-        }
-        if (updateEv.getPlace() != null) {
-            Place newP = placeRepository.findByPlaceId(updateEv.getPlace().getPlaceId());
-            if (newP != null) {
-                ex.setPlace(newP);
-            } else {
-                throw new IllegalArgumentException("Invalid place ID: " + updateEv.getPlace().getPlaceId());
-            }
-        }
-        ex.setDate(updateEv.getDate());
-        eventRepository.save(ex);
-    }
-
-    public void deleteEv(Long eventId) {
-        eventRepository.deleteById(eventId);
-    }
 }

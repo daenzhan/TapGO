@@ -23,6 +23,10 @@ public class ReviewService {
         return reviewRepository.findByReviewId(id);
     }
 
+    public List<Review> getReviewsByPlaceId(Long placeId) {
+        return reviewRepository.findByPlace_PlaceId(placeId);
+    }
+
     public Review save(Review review) {
         return reviewRepository.save(review);
     }
@@ -31,5 +35,9 @@ public class ReviewService {
         reviewRepository.deleteById(id);
     }
 
+
+    public List<Review> findByPlaceAndUser(Long id) {
+        return reviewRepository.findByPlaceIdWithUser(id);
+    }
 
 }
