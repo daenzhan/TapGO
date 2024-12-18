@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserService implements UserDetailsService {
+public class UserService {
 
     private final VerificationTokenRepository tokenRepository;
     private final UserRepository userRepository;
@@ -36,8 +36,8 @@ public class UserService implements UserDetailsService {
     }
 
     public User findByUsername(String username) {
-        return userRepository.findByUsername(username);
-                //.orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
     }
 
     public User save(User user) {
@@ -76,32 +76,8 @@ public class UserService implements UserDetailsService {
         return verificationToken.getUser();
     }
 
-
-
-    public void deleteResetPasswordToken(String token) {
-        VerificationToken tokenEntity = tokenRepository.findByToken(token);
-        if (tokenEntity != null) {
-            tokenRepository.delete(tokenEntity);
-        }
-    }
-
-
     public List<User> getAllUsers() {
         return userRepository.findAllUsersWithReviews();
-    }
-
-
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByUsername(username);
-        if (user == null) {
-            throw new UsernameNotFoundException("User not found");
-        }
-        return new org.springframework.security.core.userdetails.User(
-                user.getUsername(),
-                user.getPassword(),
-                List.of(new SimpleGrantedAuthority("ROLE_USER"))
-        );
     }
 
 }
